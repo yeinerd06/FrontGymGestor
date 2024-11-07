@@ -1,46 +1,34 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState,  } from "react";
 import {
   Button,
-  Card,
-  CardBody,
   Row,
   Col,
-  CardHeader,
   CardTitle,
   Container,
-  Modal,
-  CardFooter,
   CardImg,
-  Placeholder,
-  PlaceholderButton,
-  Media,
 } from "reactstrap";
-//import  "./mensaje.css";
 
 import { Link } from "react-router-dom";
 import Carrusel from "../../components/Carousel/Carrusel";
-import ChartComponent from "../../components/Carousel/Charts";
-import { datosAsitencias, } from "../../api/Asistencias/Asistencia";
 import "../../assets/css/spinner.css";
-import { useTransition, animated } from "@react-spring/web";
 import horarioPrev from "../../assets/img/carrusel/horario.jpg";
-import "../../assets/css/mensaje.css"
+import "../../assets/css/mensaje.css";
 
-import Slider from "react-slick";
 import { FaWhatsapp } from "react-icons/fa";
 
 import { useUserContext } from "../../components/Context/UserContext";
 
 const Index = () => {
   const [downloading, setDownloading] = useState(false);
-  
-  const {
-    publicidades,
-    horario,
-    corporativo
-    
-  }=useUserContext();
 
+  const { publicidades, horario, corporativo } = useUserContext();
+  const enviarMensajeWhatsapp = () => {
+    const numeroTelefono = corporativo?.telefono;
+    if (numeroTelefono) {
+      const url = `whatsapp://send?phone=${numeroTelefono}`;
+      window.open(url, '_blank');
+    }
+  };
   return (
     <>
       <Container>
@@ -49,17 +37,14 @@ const Index = () => {
             <div className="spinner " aria-hidden="true"></div>
           </div>
         )}
-        
 
         <Row>
           <Col md="6" className="mt-3">
-            { horario==="" ? (
-              <img src={horarioPrev} alt="..." className="responsive"  />
-            ):(
-              
-              <img src={horario} alt="..." className="responsive"  />
+            {horario === "" ? (
+              <img src={horarioPrev} alt="..." className="responsive" />
+            ) : (
+              <img src={horario} alt="..." className="responsive" />
             )}
-            
           </Col>
           <Col md="6" className="mt-3">
             <Carrusel />
@@ -83,10 +68,7 @@ const Index = () => {
                   </CardTitle>
                 </div>
                 <div className="col">
-                  <Link
-                    to={corporativo?.ubicacion}
-                    target="_blank"
-                  >
+                  <Link to={corporativo?.ubicacion} target="_blank">
                     <p className="mt-3 mb-0 text-muted text-sm text-center">
                       <span className="text-primary mr-2">
                         <i className="fa fa-location-arrow " /> VER MAPA
@@ -103,7 +85,7 @@ const Index = () => {
                 <Col sm="12" className="mt-3" key={publicidad.id}>
                   <CardImg
                     alt="Card image cap"
-                    src={publicidad?.url}
+                    src={publicidad?.foto}
                     style={{
                       height: 270,
                     }}
@@ -116,11 +98,8 @@ const Index = () => {
           <br />
         </Row>
         <Row>
-          <Button className="whatsapp-button">
-            <a href={corporativo?.telefono} target="_blank">
-              {" "}
-              <FaWhatsapp className="h1 mt-1 text-white" />
-            </a>
+          <Button className="whatsapp-button" onClick={enviarMensajeWhatsapp}>
+            <FaWhatsapp className="h1 mt-1 text-white" />
           </Button>
         </Row>
       </Container>

@@ -32,6 +32,7 @@ import { sendEmailNuevoUsuario } from "../../../api/Membresia/Membresia";
 import SpinnerGrupo from "../../../components/Sppiner";
 import { MagicMotion } from "react-magic-motion";
 import { useUserContext } from "../../../components/Context/UserContext";
+import ToggleButton from "../../../components/ToggleButtom/ToggleButtom";
 
 
 const Entrenador = () => {
@@ -74,9 +75,12 @@ const Entrenador = () => {
 
   //Actualizar campos del modal
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+  
+    // Manejar el estado del checkbox
+    const newValue = type === 'checkbox' ? checked : value;
 
-    setEntrenador((prevEntrenador) => ({ ...prevEntrenador, [name]: value }));
+    setEntrenador((prevEntrenador) => ({ ...prevEntrenador, [name]: newValue }));
   };
 
   // useEffect(() => {
@@ -199,6 +203,22 @@ const Entrenador = () => {
       sortable: true,
       wrap: true,
     },
+    {
+      name: "Activo",
+      cell: (row) => row?.usuario?.estado ?
+       <Link className="text-primary h2" title="ACTIVA">
+        <i class="fa fa-check-square text-success fw-bold" aria-hidden="true"/>
+       </Link>
+      :<Link className="text-primary h2" title="OCULTA">
+        <i class="fa fa-ban text-red" aria-hidden="true"/>
+      </Link> 
+      ,
+      selector: (row) => row.estado,
+
+      sortable: true,
+      maxWidth: "35px",
+    },
+
 
     {
       name: "Acciones",
@@ -352,7 +372,7 @@ const Entrenador = () => {
                     <Col lg="12">
                       <FormGroup>
                         <label className="form-control-label" htmlFor="email">
-                          Correo Electronico
+                          Correo 
                         </label>
                         <Input
                           className="form-control-alternative text-dark fw-bold"
@@ -366,6 +386,7 @@ const Entrenador = () => {
                         />
                       </FormGroup>
                     </Col>
+                    
                     <Col lg="4">
                       <FormGroup>
                         <label className="form-control-label" htmlFor="cedula">
@@ -486,7 +507,7 @@ const Entrenador = () => {
                       </FormGroup>
                     </Col>
 
-                    <Col lg="12">
+                    <Col lg="8">
                       <FormGroup>
                         <label className="form-control-label" htmlFor="email">
                           Correo Electronico
@@ -502,6 +523,14 @@ const Entrenador = () => {
                           disabled
                           required
                         />
+                      </FormGroup>
+                    </Col>
+                    <Col lg="4">
+                      <FormGroup>
+                        <label className="form-control-label" htmlFor="email">
+                          Activo
+                        </label>
+                       <  ToggleButton value={entrenador?.estado} onChange={handleChange} />
                       </FormGroup>
                     </Col>
                     <Col lg="4">

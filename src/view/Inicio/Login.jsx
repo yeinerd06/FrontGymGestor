@@ -23,11 +23,10 @@ import { MagicTabSelect } from "react-magic-motion";
 import { useUserContext } from "../../components/Context/UserContext";
 
 const Login = () => {
-
   const navigate = useNavigate();
   // Usa useLocation para obtener la ubicación actual
   const location = useLocation();
-  const{modulo,setModulo}=useUserContext()
+  const { modulo, setModulo } = useUserContext();
   // Analiza los parámetros de búsqueda (query string) de la URL
   const searchParams = new URLSearchParams(location.search);
   const moduloUser = searchParams.get("modulo");
@@ -47,40 +46,46 @@ const Login = () => {
       email,
       password,
     };
-    //Realizo peticion para iniciar sesion
     iniciarSesion(usuario)
-      .then((response) => response)
-      .then((JWT) => {
-        if (JWT.status === 200 && JWT.headers.has("Authorization")) {
-          setContraseñaIncorrecta(false);
-          const bearerToken = JWT.headers.get("Authorization");
-          const token = bearerToken.replace("Bearer ", "");
-
-          const usuario = JSON.parse(JSON.stringify(parseJwt(token)));
-          const rol = usuario?.roles[0].nombre?.split("_")[1].toLowerCase();
-          if (moduloUser === rol) {
-            localStorage.setItem("token", token);
-            localStorage.setItem("data", JSON.stringify(parseJwt(token)));
-
-            localStorage.setItem("modulo", rol);
-            navigate("/" + rol + "/index");
-            setDownloading(false);
-          } else {
-            setDownloading(false)
-            alert("Usuario no autorizado");
-          }
-        } else {
-          setDownloading(false);
-          setContraseñaIncorrecta(true);
-          setMensaje("Contraseña o Email incorrecto");
-
-          //eliminarToken();
-        }
-      })
-      .catch((err) => {
+    .then((response) => {
+      if (response.status === 200 && response.headers.has("Authorization")) {
+        return response; // Pasar al siguiente .then sin hacer .json() aún
+      } else {
+        // Si el estado no es 200, parsea la respuesta como JSON para obtener el mensaje de error
+        return response.json().then((errorData) => {
+          throw new Error(errorData.message || "Contraseña o Email incorrecto");
+        });
+      }
+    })
+    .then((JWT) => {
+      // Procesar la respuesta exitosa
+      setContraseñaIncorrecta(false);
+      const bearerToken = JWT.headers.get("Authorization");
+      const token = bearerToken.replace("Bearer ", "");
+  
+      const usuario = JSON.parse(JSON.stringify(parseJwt(token)));
+      const rol = usuario?.roles[0].nombre?.split("_")[1].toLowerCase();
+      if (moduloUser === rol) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("data", JSON.stringify(parseJwt(token)));
+        localStorage.setItem("modulo", rol);
+        navigate("/" + rol + "/index");
         setDownloading(false);
-        console.log(err);
-      });
+      } else {
+        setDownloading(false);
+        alert("Usuario no autorizado");
+      }
+    })
+    .catch((err) => {
+      setDownloading(false);
+      setContraseñaIncorrecta(true);
+  
+      // Mostrar el mensaje de error capturado o un mensaje predeterminado
+      setMensaje(err.message);
+      console.log(err);
+    });
+  
+  
   };
   function parseJwt(token) {
     var base64Url = token.split(".")[1];
@@ -116,9 +121,7 @@ const Login = () => {
         )}
         <Card className="bg-white shadow  border my-2" color="primary" outline>
           <CardBody className="px-lg-5 py-lg-5">
-            <h1 className="text-center  p-3 text-dark fw-bold">
-              BIENVENIDO
-            </h1>
+            <h1 className="text-center  p-3 text-dark fw-bold">BIENVENIDO</h1>
 
             <Nav fill className="text-center align-items-center ">
               <NavItem style={{ flex: 1 }}>

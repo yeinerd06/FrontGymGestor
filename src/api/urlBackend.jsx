@@ -1,6 +1,5 @@
 const urlBackend="https://gimnasioapi-production.up.railway.app/"
-//"https://gimnasioapi-production.up.railway.app/"
-//"https://gimnasioapi-production.up.railway.app/"
+
 //"http://localhost:8080/"
 
 function getAuthorizationHeaders() {

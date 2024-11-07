@@ -44,6 +44,7 @@ import { saveCliente } from "../../../api/Registro/Cliente";
 import SpinnerGrupo from "../../../components/Sppiner";
 import { useUserContext } from "../../../components/Context/UserContext";
 import { downloadPdfComprobante, sendEmailComprobante } from "../../../api/Membresia/Comprobante";
+import ToggleButton from "../../../components/ToggleButtom/ToggleButtom";
 
 const Cliente = () => {
   const{membresiasActivas, clientes,setClientes,setUsuariosMembresias}=useUserContext();
@@ -72,13 +73,16 @@ const Cliente = () => {
   };
   //Actualizar campos del modal
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setCliente((prevCliente) => ({ ...prevCliente, [name]: value }));
+    const { name, value, type, checked } = e.target;
+  
+    // Manejar el estado del checkbox
+    const newValue = type === 'checkbox' ? checked : value;
+    setCliente((prevCliente) => ({ ...prevCliente, [name]: newValue }));
   };
   //Actualizar cliente
   const actualizarCliente = (e) => {
     e.preventDefault();
+    console.log(cliente)
     setDownloading(true);
     updateUsuario(cliente)
       .then((response) => {
@@ -174,6 +178,21 @@ const Cliente = () => {
       selector: (row) => row.usuario.fechaNacimiento.split("T")[0],
       sortable: true,
       wrap: true,
+    },
+    {
+      name: "Activo",
+      cell: (row) => row?.usuario?.estado ?
+       <Link className="text-primary h2" title="ACTIVA">
+        <i class="fa fa-check-square text-success fw-bold" aria-hidden="true"/>
+       </Link>
+      :<Link className="text-primary h2" title="OCULTA">
+        <i class="fa fa-ban text-red" aria-hidden="true"/>
+      </Link> 
+      ,
+      selector: (row) => row.estado,
+
+      sortable: true,
+      maxWidth: "35px",
     },
 
     {
@@ -947,7 +966,7 @@ const Cliente = () => {
                       </FormGroup>
                     </Col>
 
-                    <Col lg="12">
+                    <Col lg="8">
                       <FormGroup>
                         <label className="form-control-label" htmlFor="email">
                           Correo Electronico
@@ -957,12 +976,20 @@ const Cliente = () => {
                           id="email"
                           name="email"
                           placeholder="jesse@example.com"
-                          type="email"
+                          type="text"
                           value={cliente.email}
                           onChange={handleChange}
                           disabled={modulo==="admin"? false:true}
                           required
                         />
+                      </FormGroup>
+                    </Col>
+                    <Col lg="4">
+                      <FormGroup>
+                        <label className="form-control-label" htmlFor="email">
+                          Activo
+                        </label>
+                       <  ToggleButton value={cliente?.estado} onChange={handleChange} />
                       </FormGroup>
                     </Col>
                     <Col lg="4">

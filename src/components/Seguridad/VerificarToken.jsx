@@ -17,6 +17,7 @@ const VerificarToken = () => {
           location.pathname !== "/auth/login" &&
           location.pathname !== "/auth/recuperar" 
         ) {
+          //localStorage.clear()
           navigate("/auth/login");
         }
       }

@@ -14,7 +14,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              ENERGY TIME
+             MAS FITNESS
             </a>
           </div>
         </Col>

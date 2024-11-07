@@ -31,6 +31,7 @@ import Swal from "sweetalert2";
 import { sendEmailNuevoUsuario } from "../../../api/Membresia/Membresia";
 import SpinnerGrupo from "../../../components/Sppiner";
 import { useUserContext } from "../../../components/Context/UserContext";
+import ToggleButton from "../../../components/ToggleButtom/ToggleButtom";
 
 const Recepcionista = () => {
   const[loading,setLoading]=useState(false)
@@ -106,6 +107,21 @@ const Recepcionista = () => {
       selector: (row) => row.usuario.fechaNacimiento.split("T")[0],
       sortable: true,
       wrap: true,
+    },
+    {
+      name: "Activo",
+      cell: (row) => row?.usuario?.estado ?
+       <Link className="text-primary h2" title="ACTIVA">
+        <i class="fa fa-check-square text-success fw-bold" aria-hidden="true"/>
+       </Link>
+      :<Link className="text-primary h2" title="OCULTA">
+        <i class="fa fa-ban text-red" aria-hidden="true"/>
+      </Link> 
+      ,
+      selector: (row) => row.estado,
+
+      sortable: true,
+      maxWidth: "35px",
     },
 
     {
@@ -209,9 +225,12 @@ const Recepcionista = () => {
   };
   //Actualizar campos del modal
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+  
+    // Manejar el estado del checkbox
+    const newValue = type === 'checkbox' ? checked : value;
 
-    setRecepcionista((prevRecepcionista) => ({ ...prevRecepcionista, [name]: value }));
+    setRecepcionista((prevRecepcionista) => ({ ...prevRecepcionista, [name]: newValue }));
   };
 
   const filtroProblemas = recepcionistas.filter((recepcionista) =>
@@ -362,6 +381,7 @@ const Recepcionista = () => {
                         />
                       </FormGroup>
                     </Col>
+                
                     <Col lg="4">
                       <FormGroup>
                         <label className="form-control-label" htmlFor="cedula">
@@ -482,7 +502,7 @@ const Recepcionista = () => {
                       </FormGroup>
                     </Col>
 
-                    <Col lg="12">
+                    <Col lg="8">
                       <FormGroup>
                         <label className="form-control-label" htmlFor="email">
                           Correo Electronico
@@ -498,6 +518,14 @@ const Recepcionista = () => {
                           disabled
                           required
                         />
+                      </FormGroup>
+                    </Col>
+                    <Col lg="4">
+                      <FormGroup>
+                        <label className="form-control-label" htmlFor="email">
+                          Activo
+                        </label>
+                       <  ToggleButton value={recepcionista?.estado} onChange={handleChange} />
                       </FormGroup>
                     </Col>
                     <Col lg="4">

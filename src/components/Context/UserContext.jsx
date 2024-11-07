@@ -46,11 +46,11 @@ export const UserProvider = ({ children }) => {
         .then((res) => res.json())
         .then((data) => {
           setCorporativo(data);
-          if (data.logo !== null) {
-            getLogo(data.logo);
+          if(data?.logo!==null){
+          setLogoImg(data?.logo);
           }
-          if (data.horario !== null) {
-            getHorario(data.horario);
+          if(data?.horario!==null){
+          setHorario(data?.horario);
           }
         });
     } catch (error) {
@@ -58,32 +58,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const getLogo = async (key) => {
-    try {
-      const response = await downloadLogo(key);
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const imageUrl = URL.createObjectURL(blob); // Crea una URL para la imagen descargada
-        setLogoImg(imageUrl);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const getHorario = async (key) => {
-    try {
-      const response = await downloadHorario(key);
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const imageUrl = URL.createObjectURL(blob); // Crea una URL para la imagen descargada
-        setHorario(imageUrl);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   /*
       MODULOS 
@@ -138,14 +112,16 @@ export const UserProvider = ({ children }) => {
       obtenerEntrenador();
       setTimeout(() => {
         listadoAsistencia();
-        listaRutinasCliente()
+        listaRutinasCliente();
         listadoEjercicios();
       }, 500);
     }
   }, [modulo, membresiaActiva]);
   //TODOS LOS MODULOS
   useEffect(() => {
-    if (usuario !== null) getImagenPerfil();
+    console.log(usuario)
+    if (usuario?.foto) 
+      setUrlImagen(usuario.foto);
   }, [usuario]);
 
   const membresiaActualCliente = (id) => {
@@ -195,8 +171,9 @@ export const UserProvider = ({ children }) => {
   }, []);
   //MODULO ENTRENADOR
   useEffect(() => {
+    if(modulo==="entrenador")
     listadoClientesEntrenador();
-  }, []);
+  }, [modulo]);
   const [clientesEntrenador, setClientesEntrenador] = useState([]);
   const listadoClientesEntrenador = async () => {
     try {
@@ -227,14 +204,8 @@ export const UserProvider = ({ children }) => {
       const res = await listaImagenPublicidad();
       const data = await res.json();
 
-      const newData = await Promise.all(
-        data.map(async (publicidad) => {
-          const imageUrl = await getImagenPublicidad(publicidad.foto);
-          return { ...publicidad, url: imageUrl };
-        })
-      );
-
-      setPublicidades(newData);
+      
+      setPublicidades(data);
     } catch (error) {
       console.log(error);
     }
@@ -469,7 +440,8 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
-        rutinasCliente,setRutinasCliente,
+        rutinasCliente,
+        setRutinasCliente,
         membresiaActual,
         setMembresiaActual,
         dataMembresiaActiva,

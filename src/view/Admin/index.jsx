@@ -188,7 +188,7 @@ const Index = () => {
     // Convierte la diferencia en días
     const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
 
-    return Math.abs(Math.round(diferenciaEnDias)) ; // Usamos Math.abs para asegurarnos de que la diferencia sea positiva
+    return Math.abs(Math.round(diferenciaEnDias)); // Usamos Math.abs para asegurarnos de que la diferencia sea positiva
   };
 
   useEffect(() => {
@@ -277,8 +277,6 @@ const Index = () => {
                               termina: {fechaFin.fechaFin?.split("T")[0]}{" "}
                             </small>
                           </p>
-
-                         
                         </>
                       ) : (
                         <>
@@ -308,16 +306,16 @@ const Index = () => {
                         </Button>
                       </div>
                     )}
-                    {membresiaActiva &&(
-                      <div>
-                         <hr />
-                          <p className="h3 text-center">
-                            {membresiaActual.nombre}
-                          </p>
-                          <p>
-                            <small>{membresiaActual.descripcion}</small>
-                          </p>
-                      </div>
+                    {membresiaActiva && (
+                      <Col sm={12} className="text-center">
+                        <hr />
+                        <p className="h3 ">
+                          {membresiaActual.nombre}
+                        </p>
+                        <p>
+                          <small>{membresiaActual.descripcion}</small>
+                        </p>
+                      </Col>
                     )}
                   </Row>
                 </CardBody>

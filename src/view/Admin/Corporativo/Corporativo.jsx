@@ -3,16 +3,12 @@ import React from "react";
 import {
   Card,
   CardHeader,
-  CardTitle,
   Container,
   Row,
   Col,
   CardBody,
-  Media,
   Button,
-  Table,
   FormGroup,
-  Label,
   Input,
   Modal,
   CardFooter,
@@ -21,13 +17,9 @@ import {
 } from "reactstrap";
 // core components
 import Header from "../../../components/Headers/Header";
-import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  customTheme,
-  customStyles,
-} from "../../../components/Datatable/DatatableCustom";
+
 import "../../../assets/css/spinner.css";
 import Swal from "sweetalert2";
 import SpinnerGrupo from "../../../components/Sppiner";
@@ -38,7 +30,7 @@ import {
   deleteImagenPublicidad,
   updateCorporativo,
   saveLogo,
-  saveHorario
+  saveHorario,
 } from "../../../api/Corporativo/Corporativo";
 import { useUserContext } from "../../../components/Context/UserContext";
 
@@ -49,12 +41,17 @@ const Corporativo = () => {
     corporativo,
     setCorporativo,
     urlImagen,
-    logoImg,setLogoImg,
-    horario,setHorario
+    logoImg,
+    setLogoImg,
+    horario,
+    setHorario,
   } = useUserContext();
   //Habilito los input
-  const [corporativoNew, setCorporativoNew] = useState(corporativo);
+  const [corporativoNew, setCorporativoNew] = useState({});
   const [disabledInputs, setDisabledInputs] = useState(true); // Estado para controlar la propiedad disabled
+  useEffect(()=>{
+    setCorporativoNew(corporativo)
+  },[corporativo])
   const handleHabilitarCampos = () => {
     //alert("Actualizar")
     setDisabledInputs(!disabledInputs);
@@ -119,7 +116,6 @@ const Corporativo = () => {
       if (file) {
         const reader = new FileReader();
         reader.onload = async (e) => {
-
           Swal.fire({
             imageUrl: e.target.result,
             imageAlt: "...",
@@ -134,14 +130,11 @@ const Corporativo = () => {
               formDataFile.append("file", file); // Usar 'file' en lugar de e.target.result
 
               try {
-                const response = await saveLogo(
-                  
-                  formDataFile
-                );
+                const response = await saveLogo(formDataFile);
                 if (response.ok) {
-                  setLogoImg(e.target.result)
+                  setLogoImg(e.target.result);
                   const data = await response.json();
-                  setCorporativo(data)
+                  setCorporativo(data);
                   setDownloading(false);
                   Swal.fire({
                     icon: "success",
@@ -190,7 +183,6 @@ const Corporativo = () => {
       if (file) {
         const reader = new FileReader();
         reader.onload = async (e) => {
-
           Swal.fire({
             imageUrl: e.target.result,
             imageAlt: "...",
@@ -205,14 +197,11 @@ const Corporativo = () => {
               formDataFile.append("file", file); // Usar 'file' en lugar de e.target.result
 
               try {
-                const response = await saveHorario(
-                  
-                  formDataFile
-                );
+                const response = await saveHorario(formDataFile);
                 if (response.ok) {
-                  setHorario(e.target.result)
+                  setHorario(e.target.result);
                   const data = await response.json();
-                  setCorporativo(data)
+                  setCorporativo(data);
                   setDownloading(false);
                   Swal.fire({
                     icon: "success",
@@ -260,35 +249,18 @@ const Corporativo = () => {
     try {
       const res = await listaImagenPublicidad();
       const data = await res.json();
+      console.log(data);
 
-      const newData = await Promise.all(
-        data.map(async (publicidad) => {
-          const imageUrl = await getImagenPublicidad(publicidad.foto);
-          return { ...publicidad, url: imageUrl };
-        })
-      );
+     
 
-      setPublicidades(newData);
+       setPublicidades(data);
       setLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
 
-  //    //Abrir modal y cargar entrenador
-  //    const handleOpciones = (entrenador) => {
-  //     toggleUpdate();
-  //   };
-  //   //Actualizar campos del modal
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-
-  //     setRecepcionista((prevRecepcionista) => ({ ...prevRecepcionista, [name]: value }));
-  //   };
-
-  //   const filtroProblemas = recepcionistas.filter((recepcionista) =>
-  //     recepcionista.usuario.cedula.toLowerCase().includes(filtro.toLowerCase())
-  //   );
+ 
   const [imagen, setImagen] = useState(null);
   const [archivo, setArchivo] = useState(null);
 
@@ -314,7 +286,6 @@ const Corporativo = () => {
   const registrarPublicidad = async (e) => {
     setDownloading(true);
     e.preventDefault();
-    console.log(archivo);
     const formDataFile = new FormData();
     formDataFile.append("file", archivo); // Usar 'file' en lugar de e.target.result
 
@@ -322,6 +293,7 @@ const Corporativo = () => {
       const response = await saveImagenPublicidad(formDataFile);
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         listaPublicidades();
 
         toggle();
@@ -499,7 +471,7 @@ const Corporativo = () => {
                             className="form-control-label"
                             htmlFor="input-email"
                           >
-                            Aforo 
+                            Aforo
                           </label>
                           <Input
                             className="form-control-alternative text-center text-dark"
@@ -569,12 +541,7 @@ const Corporativo = () => {
                       </div>
                     </Row>
 
-                    <img
-                      alt="..."
-                      className="img-fluid"
-                      src={logoImg}
-                     
-                    />
+                    <img alt="..." className="img-fluid" src={logoImg} />
                   </Col>
 
                   <Col sm="12">
@@ -596,12 +563,7 @@ const Corporativo = () => {
                         </Link>
                       </div>
                     </Row>
-                    <img
-                      alt="..."
-                      className="img-fluid "
-                      src={horario}
-                     
-                    />
+                    <img alt="..." className="img-fluid " src={horario} />
                   </Col>
                   <hr />
                 </Row>
@@ -626,9 +588,9 @@ const Corporativo = () => {
                   <SpinnerGrupo />
                 ) : (
                   <>
-                    {publicidades.length > 0 && (
+                    {publicidades?.length > 0 && (
                       <Row>
-                        {publicidades.map((publicidad) => (
+                        {publicidades?.map((publicidad) => (
                           <Col
                             className="mt-3 position-relative"
                             sm="12"
@@ -649,7 +611,7 @@ const Corporativo = () => {
                             </div>
                             <CardImg
                               alt="Imagen publicidad "
-                              src={publicidad.url}
+                              src={publicidad?.foto}
                               style={{
                                 height: 270,
                               }}
@@ -730,53 +692,6 @@ const Corporativo = () => {
               </CardBody>
               <CardFooter className="d-flex justify-content-between">
                 <Button className="btn-white" color="default" onClick={toggle}>
-                  Cerrar
-                </Button>
-                <Button className="text-white" color="default" type="submit">
-                  Guardar
-                </Button>
-              </CardFooter>
-            </Form>
-          </Card>
-        </div>
-      </Modal>
-      {/* Modal actulizar recepcionista */}
-      <Modal
-        className="modal-dialog-centered"
-        size="lg"
-        isOpen={modalUpdate}
-        toggle={toggleUpdate}
-      >
-        <div className="modal-body p-0">
-          <Card className="bg-secondary shadow border-0">
-            <CardHeader className="bg-transparent pb-0 d-flex justify-content-between">
-              <div
-                className="text-muted text-center mt-2 mb-3"
-                style={{ flex: 1, textAlign: "center" }}
-              >
-                <h2 className="text-uppercase">Actualizar Entrenador</h2>
-              </div>
-              <button
-                className="btn btn-close text-dark"
-                style={{
-                  backgroundColor: "transparent", // Color de fondo del botón transparente
-                  border: "none",
-                }}
-                onClick={toggleUpdate}
-              >
-                <i class="fa fa-times-circle" aria-hidden="true"></i>
-              </button>
-            </CardHeader>
-            <Form
-            //onSubmit={actualizarRecepcionista}
-            >
-              <CardBody className="px-lg-3 py-lg-2"></CardBody>
-              <CardFooter className="d-flex justify-content-between">
-                <Button
-                  className="btn-white"
-                  color="default"
-                  onClick={toggleUpdate}
-                >
                   Cerrar
                 </Button>
                 <Button className="text-white" color="default" type="submit">

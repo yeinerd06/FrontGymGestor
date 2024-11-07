@@ -93,6 +93,7 @@ const Perfil = () => {
                 if (response.ok) {
                   setUrlImagen(e.target.result)
                   const data = await response.json();
+                  
                   setUsuario(data);
                   setTieneImagen(false);
                   
