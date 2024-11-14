@@ -59,7 +59,9 @@ const Cliente = () => {
   //const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [cedula, setCedula] = useState("");
-  const [phone, setPhone] = useState("");
+  const [corre, setCorre] = useState("");
+  const [fecanac, setFecanac] = useState("");
+  const [nombe, setNombe] = useState("");
   const [usuarioMembresia, setUsuarioMembresia] = useState([]);
   const [existeUsuario, setExisteUsuario] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -712,7 +714,7 @@ const Cliente = () => {
                                             type="email"
                                             value={corre}
                                             onChange={(e) =>
-                                              setcorre(e.target.value)
+                                              setCorre(e.target.value)
                                             }
                                             required
                                           />
