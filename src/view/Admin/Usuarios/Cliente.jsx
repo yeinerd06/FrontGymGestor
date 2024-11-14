@@ -59,6 +59,7 @@ const Cliente = () => {
   //const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [cedula, setCedula] = useState("");
+  const [phone, setPhone] = useState("");
   const [corre, setCorre] = useState("");
   const [fecanac, setFecanac] = useState("");
   const [nombe, setNombe] = useState("");
