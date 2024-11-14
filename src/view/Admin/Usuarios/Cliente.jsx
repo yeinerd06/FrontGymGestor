@@ -370,6 +370,9 @@ const Cliente = () => {
   const clearForm = () => {
     setCedula("");
     setPhone("");
+    setCorre("");
+    setFecanac("");
+    setNombe("");
     setCliente([]);
     setExisteUsuario(false);
     setColor("primary");
@@ -684,6 +687,10 @@ const Cliente = () => {
                                             name="input-nombre-new"
                                             placeholder="Marlon"
                                             type="text"
+                                            value={nombe}
+                                            onChange={(e) =>
+                                              setNombe(e.target.value)
+                                            }
                                             required
                                           />
                                         </FormGroup>
@@ -703,6 +710,10 @@ const Cliente = () => {
                                             name="input-email-new"
                                             placeholder="jesse@example.com"
                                             type="email"
+                                            value={corre}
+                                            onChange={(e) =>
+                                              setcorre(e.target.value)
+                                            }
                                             required
                                           />
                                         </FormGroup>
@@ -764,6 +775,10 @@ const Cliente = () => {
                                             id="input-fechaNacimiento-new"
                                             name="input-fechaNacimiento-new"
                                             type="date"
+                                            value={fecanac}
+                                            onChange={(e) =>
+                                              setFecanac(e.target.value)
+                                            }
                                             required
                                           />
                                         </FormGroup>
