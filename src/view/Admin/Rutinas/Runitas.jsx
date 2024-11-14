@@ -8,7 +8,6 @@ import {
   Row,
   Col,
   Button,
-  Table,
   FormGroup,
   Label,
   Input,
@@ -20,15 +19,9 @@ import {
   TabContent,
   TabPane,
   Modal,
-  ModalBody,
   CardFooter,
   CardText,
-  CardImg,
   Collapse,
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-  AccordionItem,
 } from "reactstrap";
 // core components
 import classnames from "classnames";
@@ -70,7 +63,7 @@ const Rutinas = () => {
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(true);
-  
+
   const [musculos, setMusculos] = useState([]);
   const [tabs, setTabs] = useState(1);
   const toggleNavs = (index) => {
@@ -99,14 +92,15 @@ const Rutinas = () => {
     try {
       const response = await listaMusculo();
       const data = await response.json();
-  
+      console.log(data);
       setMusculos(data);
     } catch (error) {
+      alert(error);
       console.log(error);
     }
   };
   useEffect(() => {
-    listaMusculo()
+    listadoMusculos();
     listadoEquipamiento();
   }, []);
 
@@ -537,6 +531,7 @@ const Rutinas = () => {
     listaRutinas()
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setRutinas(data);
         setLoading(false);
       })
@@ -680,37 +675,33 @@ const Rutinas = () => {
     setMusculoSeleccionado(nuevoValor);
   };
 
-
-  const registrarMusculo= async()=>{
+  const registrarMusculo = async () => {
     const { value: musculo } = await Swal.fire({
       title: "Registrar Musculo",
       input: "text",
       inputLabel: "Musculo",
-      inputPlaceholder: "Ingresa el nombre"
+      inputPlaceholder: "Ingresa el nombre",
     });
     if (musculo) {
-      setDownloading(true)
-      const musculoNew={
-        nombre:musculo
-      }
+      setDownloading(true);
+      const musculoNew = {
+        nombre: musculo,
+      };
       saveMusculo(musculoNew)
-      .then(res=>res.json())
-      .then(data=>{
-        listadoMusculos()
-        Swal.fire(`Musculo: ${musculo} Registrado`);
-      })
-      .catch(e=>{
-       
-        listadoMusculos()
-        Swal.fire(`Error Musculo: ${musculo} ya esta Registrado`);
-
-      })
-      .finally(f=>{
-        setDownloading(false)
-      })
-      
+        .then((res) => res.json())
+        .then((data) => {
+          listadoMusculos();
+          Swal.fire(`Musculo: ${musculo} Registrado`);
+        })
+        .catch((e) => {
+          listadoMusculos();
+          Swal.fire(`Error Musculo: ${musculo} ya esta Registrado`);
+        })
+        .finally((f) => {
+          setDownloading(false);
+        });
     }
-  }
+  };
   const handleEliminarRutina = (rutina) => {
     Swal.fire({
       title: "Eliminar Rutina?",
@@ -970,8 +961,10 @@ const Rutinas = () => {
                                       <Row className="aling-items-center">
                                         <div className="col  ">
                                           <h3 className="mb-0 mt-3 text-dark fw-bold">
-                                            <small className="h2 text-primary">{index+1}</small> RUTINA{" "}
-                                            {rutina.nombre.toUpperCase()}
+                                            <small className="h2 text-primary">
+                                              {index + 1}
+                                            </small>{" "}
+                                            RUTINA {rutina.nombre.toUpperCase()}
                                           </h3>
                                         </div>
                                         <div className="col text-right">
@@ -1522,7 +1515,14 @@ const Rutinas = () => {
                           for="musculaturaTrabajada"
                           className="form-control-label"
                         >
-                          Musculatura Trabajada: <Link title="Registrar Musculo" className="h3" onClick={registrarMusculo}><i class="fa fa-plus-circle" aria-hidden="true"></i></Link>
+                          Musculatura Trabajada:{" "}
+                          <Link
+                            title="Registrar Musculo"
+                            className="h3"
+                            onClick={registrarMusculo}
+                          >
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                          </Link>
                         </Label>
                         <Input
                           type="select"
@@ -1533,15 +1533,16 @@ const Rutinas = () => {
                           onChange={handleChange}
                           required
                         >
-                           <option value="" >Todos los musculos</option>
-                         {musculos.length>0 && (
-                          <>
-                          {musculos.map((musculo)=>(
-                          
-                          <option value={musculo.nombre} key={musculo.id}>{musculo.nombre}</option>
-                         ))}
-                          </>
-                         )}
+                          <option value="">Todos los musculos</option>
+                          {musculos.length > 0 && (
+                            <>
+                              {musculos.map((musculo) => (
+                                <option value={musculo.nombre} key={musculo.id}>
+                                  {musculo.nombre}
+                                </option>
+                              ))}
+                            </>
+                          )}
                           {/* Agrega más opciones según tus necesidades */}
                         </Input>
                       </FormGroup>
@@ -1944,7 +1945,14 @@ const Rutinas = () => {
                           for="musculaturaTrabajada"
                           className="form-control-label fw-bold text-primary"
                         >
-                          Musculatura Trabajada: <Link title="Registrar Musculo" className="h3" onClick={registrarMusculo}><i class="fa fa-plus-circle" aria-hidden="true"></i></Link>
+                          Musculatura Trabajada:{" "}
+                          <Link
+                            title="Registrar Musculo"
+                            className="h3"
+                            onClick={registrarMusculo}
+                          >
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                          </Link>
                         </Label>
                         <Input
                           type="select"
@@ -1955,15 +1963,16 @@ const Rutinas = () => {
                           onChange={handleChangeRutina}
                           required
                         >
-                        <option value="" >Todos los musculos</option>
-                         {musculos.length>0 && (
-                          <>
-                          {musculos.map((musculo)=>(
-                          
-                          <option value={musculo.nombre} key={musculo.id}>{musculo.nombre}</option>
-                         ))}
-                          </>
-                         )}
+                          <option value="">Todos los musculos</option>
+                          {musculos.length > 0 && (
+                            <>
+                              {musculos.map((musculo) => (
+                                <option value={musculo.nombre} key={musculo.id}>
+                                  {musculo.nombre}
+                                </option>
+                              ))}
+                            </>
+                          )}
                           {/* Agrega más opciones según tus necesidades */}
                         </Input>
                       </FormGroup>
@@ -2127,17 +2136,11 @@ const Rutinas = () => {
                           onChange={handleChangeRutina}
                           required
                         >
-                          <option value="">Selecciona una musculatura</option>
-                          <option value="cuadriceps">Cuádriceps</option>
-                          <option value="pectoral">Pectorales</option>
-                          <option value="biceps">Bíceps</option>
-                          <option value="espalda-baja">Espalda Baja</option>
-                          <option value="abdominales">Abdominales</option>
-                          <option value="hombros">Hombros</option>
-                          <option value="gluteos">Glúteos</option>
-                          <option value="isquiotibiales">Isquiotibiales</option>
-                          <option value="trapecios">Trapecios</option>
-                          {/* Agrega más opciones según tus necesidades */}
+                          {musculos?.map((musculo) => (
+                            <option value={musculo.nombre} key={musculo.id}>
+                              {musculo.nombre}
+                            </option>
+                          ))}
                         </Input>
                       </FormGroup>
                     </Col>

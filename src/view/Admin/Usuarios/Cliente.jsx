@@ -26,6 +26,7 @@ import DataTable from "react-data-table-component";
 import { listaUsuarioRol, updateUsuario } from "../../../api/Usuarios/Usuario";
 import classnames from "classnames";
 import React, { useState, useEffect } from "react";
+import { GrClearOption } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import "../../../assets/css/spinner.css";
 import Swal from "sweetalert2";
@@ -43,12 +44,17 @@ import {
 import { saveCliente } from "../../../api/Registro/Cliente";
 import SpinnerGrupo from "../../../components/Sppiner";
 import { useUserContext } from "../../../components/Context/UserContext";
-import { downloadPdfComprobante, sendEmailComprobante } from "../../../api/Membresia/Comprobante";
+import {
+  downloadPdfComprobante,
+  sendEmailComprobante,
+} from "../../../api/Membresia/Comprobante";
 import ToggleButton from "../../../components/ToggleButtom/ToggleButtom";
+import { FaInfoCircle } from "react-icons/fa";
 
 const Cliente = () => {
-  const{membresiasActivas, clientes,setClientes,setUsuariosMembresias}=useUserContext();
-  const modulo=localStorage.getItem("modulo")
+  const { membresiasActivas, clientes, setClientes, setUsuariosMembresias } =
+    useUserContext();
+  const modulo = localStorage.getItem("modulo");
   const [tabs, setTabs] = useState(1);
   //const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
@@ -61,6 +67,7 @@ const Cliente = () => {
   const [ocultarBoton, setOcultarBoton] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cliente, setCliente] = useState([]);
+  const [buscarCedulaCliente, setBuscarCedulaCliente] = useState(false);
   //MODAL CLIENTE
   const [modal, setModal] = useState(false);
   const toggle = () => {
@@ -74,15 +81,15 @@ const Cliente = () => {
   //Actualizar campos del modal
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-  
+
     // Manejar el estado del checkbox
-    const newValue = type === 'checkbox' ? checked : value;
+    const newValue = type === "checkbox" ? checked : value;
     setCliente((prevCliente) => ({ ...prevCliente, [name]: newValue }));
   };
   //Actualizar cliente
   const actualizarCliente = (e) => {
     e.preventDefault();
-    console.log(cliente)
+    console.log(cliente);
     setDownloading(true);
     updateUsuario(cliente)
       .then((response) => {
@@ -124,7 +131,6 @@ const Cliente = () => {
       const data = await response.json();
       setClientes(data);
       setLoading(false);
-      
     } catch (error) {
       console.log(error);
     }
@@ -134,14 +140,12 @@ const Cliente = () => {
     try {
       const response = await listaUsuarioMembresia();
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       setUsuariosMembresias(data.reverse());
     } catch (error) {
       console.log(error);
     }
   };
-
-
 
   //Columnas de la Datatable
   const columns = [
@@ -181,14 +185,19 @@ const Cliente = () => {
     },
     {
       name: "Activo",
-      cell: (row) => row?.usuario?.estado ?
-       <Link className="text-primary h2" title="ACTIVA">
-        <i class="fa fa-check-square text-success fw-bold" aria-hidden="true"/>
-       </Link>
-      :<Link className="text-primary h2" title="OCULTA">
-        <i class="fa fa-ban text-red" aria-hidden="true"/>
-      </Link> 
-      ,
+      cell: (row) =>
+        row?.usuario?.estado ? (
+          <Link className="text-primary h2" title="ACTIVA">
+            <i
+              class="fa fa-check-square text-success fw-bold"
+              aria-hidden="true"
+            />
+          </Link>
+        ) : (
+          <Link className="text-primary h2" title="OCULTA">
+            <i class="fa fa-ban text-red" aria-hidden="true" />
+          </Link>
+        ),
       selector: (row) => row.estado,
 
       sortable: true,
@@ -212,7 +221,7 @@ const Cliente = () => {
       button: true,
     },
   ];
-  
+
   //Filtrar clientes por cedula en la datatable
   const filtroClientes = clientes.filter((cliente) =>
     cliente.usuario.cedula.toLowerCase().includes(filtro.toLowerCase())
@@ -247,11 +256,12 @@ const Cliente = () => {
         setColor("success");
         setUsuarioMembresia(data);
         setExisteUsuario(true);
+        setBuscarCedulaCliente(false);
       })
       .catch((err) => {
         setColor("danger");
         console.log(err);
-
+        setBuscarCedulaCliente(true);
         setExisteUsuario(false); // Establece existeUsuario en false
         setUsuarioMembresia([]); // Limpia los campos de usuarioMembresia
       })
@@ -267,7 +277,6 @@ const Cliente = () => {
       //CLIENTES ANTIGUOS
       if (existeUsuario) {
         usuarioMembresiaSave(usuarioMembresia.usuario.id);
-        
       } else {
         //CLIENTES NUEVOS
         const formData = new FormData(e.target);
@@ -290,7 +299,6 @@ const Cliente = () => {
             usuarioMembresiaSave(data.id);
             listado();
             sendEmail(data.id);
-           
           })
           .catch((err) => {
             Swal.fire({
@@ -301,43 +309,41 @@ const Cliente = () => {
             });
           });
       }
-      
     } catch (error) {}
   };
-//Enviar email con comprobante de pago
+  //Enviar email con comprobante de pago
 
-  const enviarComprobante =(id)=>{
+  const enviarComprobante = (id) => {
     sendEmailComprobante(id)
-    .then(res=>res.json())
-    .then(data=>{
-      console.log(data)
-    })
-    .catch(error=>{
-      console.log(error)
-    })
-  }
- 
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   //GUARDAR USUARIO MEMBRESIA
   const usuarioMembresiaSave = async (usuarioId) => {
     setDownloading(true);
     let vendedorId = JSON.parse(localStorage.getItem("data")).id;
 
     const userMembresia = {
-      vendedorId:{
-        id:vendedorId
+      vendedorId: {
+        id: vendedorId,
       },
-      usuarioId:{
-        id:usuarioId
-      }
-      ,
+      usuarioId: {
+        id: usuarioId,
+      },
       membresiaId: selectedMembresia,
     };
     saveUsuarioMembresia(userMembresia)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
-        enviarComprobante(data.id)
-        listadoUsuarios()
+        console.log(data);
+        enviarComprobante(data.id);
+        listadoUsuarios();
         Swal.fire({
           icon: "success",
           title: "¡Completado!",
@@ -360,6 +366,14 @@ const Cliente = () => {
       });
   };
 
+  const clearForm = () => {
+    setCedula("");
+    setCliente([]);
+    setExisteUsuario(false);
+    setColor("primary");
+    setOcultarBoton(false);
+    setDownloading(false);
+  };
   return (
     <>
       <Header />
@@ -429,8 +443,8 @@ const Cliente = () => {
                         <Row>
                           <Col size="12">
                             <Form onSubmit={handleBuscarClick}>
-                              <h6 className="heading-small text-dark mb-4">
-                                Buscar Cliente por cedula
+                              <h6 className="heading-small text-dark mb-4 text-underline">
+                                1. Buscar Cliente por cedula
                               </h6>
                               <div className="pl-lg-4">
                                 <Row>
@@ -448,7 +462,7 @@ const Cliente = () => {
                                             className="form-control-alternative text-dark fw-bold "
                                             id="input-cedula"
                                             placeholder="1090587558"
-                                            type="text"
+                                            type="number"
                                             value={cedula}
                                             onChange={(e) =>
                                               setCedula(e.target.value)
@@ -457,10 +471,26 @@ const Cliente = () => {
                                           <Button color={color} type="submit">
                                             <i className="fa fa-search" />
                                           </Button>
+                                          <Button
+                                            color="danger"
+                                            onClick={() => clearForm()}
+                                            title="Limpiar Formulario"
+                                          >
+                                            <GrClearOption className="text-white" />
+                                          </Button>
                                         </div>
                                       </>
                                     </FormGroup>
                                   </Col>
+                                  {buscarCedulaCliente && !existeUsuario && (
+                                    <Col lg="12">
+                                      <strong className="text-danger">
+                                        <FaInfoCircle /> El cliente no esta
+                                        registrado por favor ingrese sus datos
+                                        en el formulario de registro
+                                      </strong>
+                                    </Col>
+                                  )}
                                 </Row>
                               </div>
                             </Form>
@@ -468,9 +498,13 @@ const Cliente = () => {
                             <Form onSubmit={handleRegistrarMembresia}>
                               {usuarioMembresia && existeUsuario ? (
                                 <>
-                                  <h6 className="heading-small text-dark mb-4">
-                                    Cliente Registrado
+                                  <h6 className="heading-small text-dark mb-4 text-underline">
+                                    2. Cliente Registrado
                                   </h6>
+                                  <p className="text-dark">
+                                    -El cliente ya esta registrado seleccione la
+                                    opcion de Registrar Membresia
+                                  </p>
 
                                   <div className="pl-lg-4">
                                     <Row>
@@ -581,8 +615,8 @@ const Cliente = () => {
                                   </div>
 
                                   <hr className="my-4" />
-                                  <h6 className="heading-small text-dark mb-4">
-                                    Membresias activas
+                                  <h6 className="heading-small text-dark mb-4 ">
+                                    Membresias activas del cliente
                                   </h6>
 
                                   <Table
@@ -625,10 +659,13 @@ const Cliente = () => {
                               ) : null}
                               {!existeUsuario && (
                                 <>
-                                  <h6 className="heading-small text-dark mb-4">
-                                    Registrar Cliente
+                                  <h6 className="heading-small text-dark mb-4 text-underline">
+                                    2. Formulario Registrar Cliente
                                   </h6>
-
+                                  <p className="text-dark">
+                                    -Ingrese los datos para registrar un nuevo
+                                    cliente
+                                  </p>
                                   <div className="pl-lg-4">
                                     <Row>
                                       <Col lg="12">
@@ -732,19 +769,20 @@ const Cliente = () => {
                               )}
 
                               {/* Description */}
-                              <h6 className="heading-small text-dark mb-4">
-                                Membresias
+                              <h6 className="heading-small text-dark mb-4 text-underline">
+                                3. Membresias
                               </h6>
+                              <p className="text-dark">
+                                -Seleccione la membresia que desea registrar al
+                                cliente
+                              </p>
+
                               <div className="pl-lg-4 d-flex overflow-auto">
                                 {membresiasActivas ? (
                                   <>
                                     {membresiasActivas.map((membresia) => (
                                       <Col lg="6" xl="5" key={membresia.id}>
-                                        <Card
-                                          className=""
-                                          color="dark"
-                                          outline
-                                        >
+                                        <Card className="" color="dark" outline>
                                           <CardBody>
                                             <Row>
                                               <Link className="text-dark ">
@@ -779,7 +817,7 @@ const Cliente = () => {
                                                   )}
                                                 </p>
                                                 <p className="h2 font-weight-bold mb-0 text-center">
-                                                 {membresia.duracion} Dias
+                                                  {membresia.duracion} Dias
                                                 </p>
                                               </div>
                                             </Row>
@@ -805,7 +843,6 @@ const Cliente = () => {
                                                 {membresia.nombre}
                                               </label>
                                             </div>
-                                            
                                           </CardBody>
                                         </Card>
                                       </Col>
@@ -830,6 +867,16 @@ const Cliente = () => {
                                   <p className="text-success text-center h1">
                                     Membresia Registrada
                                   </p>
+                                <div className="d-flex justify-content-end">
+                                <Button
+                                  size="sm"
+                                    color="danger"
+                                    onClick={() => clearForm()}
+                                    title="Limpiar Formulario"
+                                  >
+                                    <GrClearOption className="text-white" /> Limpiar Formulario
+                                  </Button>
+                                </div>
                                 </div>
                               )}
                             </Form>
@@ -979,7 +1026,7 @@ const Cliente = () => {
                           type="text"
                           value={cliente.email}
                           onChange={handleChange}
-                          disabled={modulo==="admin"? false:true}
+                          disabled={modulo === "admin" ? false : true}
                           required
                         />
                       </FormGroup>
@@ -989,7 +1036,10 @@ const Cliente = () => {
                         <label className="form-control-label" htmlFor="email">
                           Activo
                         </label>
-                       <  ToggleButton value={cliente?.estado} onChange={handleChange} />
+                        <ToggleButton
+                          value={cliente?.estado}
+                          onChange={handleChange}
+                        />
                       </FormGroup>
                     </Col>
                     <Col lg="4">

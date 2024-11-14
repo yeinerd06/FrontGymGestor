@@ -40,11 +40,12 @@ const Index = () => {
 
         <Row>
           <Col md="6" className="mt-3">
-            {horario === "" ? (
+            {/* {horario === "" ? (
               <img src={horarioPrev} alt="..." className="responsive" />
             ) : (
-              <img src={horario} alt="..." className="responsive" />
-            )}
+           
+            )} */}
+               <img src={horario} alt="..." className="responsive" />
           </Col>
           <Col md="6" className="mt-3">
             <Carrusel />
@@ -79,9 +80,9 @@ const Index = () => {
               </Row>
             </div>
           </Col>
-          {publicidades.length > 0 && (
+          {publicidades?.length > 0 && (
             <>
-              {publicidades.map((publicidad) => (
+              {publicidades?.map((publicidad) => (
                 <Col sm="12" className="mt-3" key={publicidad.id}>
                   <CardImg
                     alt="Card image cap"

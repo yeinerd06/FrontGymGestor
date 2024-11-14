@@ -25,17 +25,18 @@ const AdminNavbar = () => {
       <Navbar className="navbar-top navbar-horizontal navbar-dark " expand="md">
         <Container className="px-4">
           <NavbarBrand to="/" tag={Link}>
-          {logoImg==="" ?(
+          {/* {logoImg==="" ?(
             <img
             alt="Cargando..."
             src={logoDefault}
           />
           ):(
-            <img
+            
+          )} */}
+          <img
               alt="Cargando..."
               src={logoImg}
             />
-          )}
           </NavbarBrand>
           <button className="navbar-toggler" id="navbar-collapse-main">
             <span className="navbar-toggler-icon" />

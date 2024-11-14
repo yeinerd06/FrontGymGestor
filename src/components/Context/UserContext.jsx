@@ -352,6 +352,8 @@ export const UserProvider = ({ children }) => {
         console.log(data);
       })
       .catch((error) => {
+        localStorage.clear()
+        navigate("/auth/login");
         console.log(error);
       });
   };
