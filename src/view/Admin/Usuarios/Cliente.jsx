@@ -368,6 +368,7 @@ const Cliente = () => {
 
   const clearForm = () => {
     setCedula("");
+    setUsuarioMembresia("");
     setCliente([]);
     setExisteUsuario(false);
     setColor("primary");
