@@ -59,6 +59,7 @@ const Cliente = () => {
   //const [clientes, setClientes] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [cedula, setCedula] = useState("");
+  const [phone, setPhone] = useState("");
   const [usuarioMembresia, setUsuarioMembresia] = useState([]);
   const [existeUsuario, setExisteUsuario] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -368,7 +369,7 @@ const Cliente = () => {
 
   const clearForm = () => {
     setCedula("");
-    setUsuarioMembresia("");
+    setPhone("");
     setCliente([]);
     setExisteUsuario(false);
     setColor("primary");
@@ -742,6 +743,10 @@ const Cliente = () => {
                                             name="input-telefono-new"
                                             placeholder="302541787"
                                             type="text"
+                                            value={phone}
+                                            onChange={(e) =>
+                                              setPhone(e.target.value)
+                                            }
                                             required
                                           />
                                         </FormGroup>
