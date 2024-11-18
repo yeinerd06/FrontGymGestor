@@ -671,7 +671,7 @@ const Cliente = () => {
                                     2. Formulario Registrar Cliente
                                   </h6>
                                   <p className="text-dark">
-                                    -Ingrese los datos para registrar un nuevo
+                                    Ingrese los datos para registrar un nuevo
                                     cliente
                                   </p>
                                   <div className="pl-lg-4">
