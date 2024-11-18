@@ -451,7 +451,7 @@ const Cliente = () => {
                         <Row>
                           <Col size="12">
                             <Form onSubmit={handleBuscarClick}>
-                              <h6 className="heading-small text-dark mb-4 text-underline">
+                              <h6 className="heading-small text-dark mb-4">
                                 1. Buscar Cliente por cedula
                               </h6>
                               <div className="pl-lg-4">
@@ -506,7 +506,7 @@ const Cliente = () => {
                             <Form onSubmit={handleRegistrarMembresia}>
                               {usuarioMembresia && existeUsuario ? (
                                 <>
-                                  <h6 className="heading-small text-dark mb-4 text-underline">
+                                  <h6 className="heading-small text-dark mb-4">
                                     2. Cliente Registrado
                                   </h6>
                                   <p className="text-dark">
@@ -623,7 +623,7 @@ const Cliente = () => {
                                   </div>
 
                                   <hr className="my-4" />
-                                  <h6 className="heading-small text-dark mb-4 ">
+                                  <h6 className="heading-small text-dark mb-4">
                                     Membresias activas del cliente
                                   </h6>
 
@@ -667,7 +667,7 @@ const Cliente = () => {
                               ) : null}
                               {!existeUsuario && (
                                 <>
-                                  <h6 className="heading-small text-dark mb-4 text-underline">
+                                  <h6 className="heading-small text-dark mb-4">
                                     2. Formulario Registrar Cliente
                                   </h6>
                                   <p className="text-dark">
@@ -793,7 +793,7 @@ const Cliente = () => {
                               )}
 
                               {/* Description */}
-                              <h6 className="heading-small text-dark mb-4 text-underline">
+                              <h6 className="heading-small text-dark mb-4">
                                 3. Membresias
                               </h6>
                               <p className="text-dark">
