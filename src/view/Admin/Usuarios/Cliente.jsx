@@ -793,9 +793,9 @@ const Cliente = () => {
                               )}
 
                               {/* Description */}
-                              <h6 className="heading-small text-dark mb-4">
+                              <h3 className="heading-small text-dark mb-4">
                                 3. Membresias
-                              </h6>
+                              </h3>
                               <p className="text-dark">
                                 Seleccione la membresia que desea registrar al
                                 cliente
