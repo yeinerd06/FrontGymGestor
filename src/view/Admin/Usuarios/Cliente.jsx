@@ -510,7 +510,7 @@ const Cliente = () => {
                                     2. Cliente Registrado
                                   </h6>
                                   <p className="text-dark">
-                                    -El cliente ya esta registrado seleccione la
+                                    El cliente ya esta registrado seleccione la
                                     opcion de Registrar Membresia
                                   </p>
 
@@ -797,7 +797,7 @@ const Cliente = () => {
                                 3. Membresias
                               </h6>
                               <p className="text-dark">
-                                -Seleccione la membresia que desea registrar al
+                                Seleccione la membresia que desea registrar al
                                 cliente
                               </p>
 
