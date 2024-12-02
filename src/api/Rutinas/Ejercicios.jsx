@@ -11,6 +11,10 @@ async function listaEjercicios(){
     return result;
 }
 
+
+//actualizado al
+
+
 async function saveEjercicio(ejercicio){
     let token=localStorage.getItem("token")
     const result=await fetch(urlBackend+"ejercicio/save",{
