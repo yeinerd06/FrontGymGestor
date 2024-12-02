@@ -1,6 +1,6 @@
-const urlBackend="https://gimnasioapi-production.up.railway.app/"
+//const urlBackend="https://gimnasioapi-production.up.railway.app/"
 
-//"http://localhost:8080/"
+const urlBackend="http://localhost:8080/"
 
 function getAuthorizationHeaders() {
     const token = localStorage.getItem("token");
